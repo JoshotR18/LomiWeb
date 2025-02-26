@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestionar Usuarios</title>
+  <link rel="stylesheet" href="GestionarUsuarios.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Gestionar Usuarios</h1>
+    
+    <!-- Sección de listado de usuarios -->
+    <section id="user-list">
+      <h2>Lista de Usuarios</h2>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rango</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="user-list-body">
+            <!-- Aquí se cargarán dinámicamente los usuarios -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+    
+    <!-- Sección para agregar o editar usuario -->
+    <section id="user-form-section">
+      <h2 id="form-title">Agregar Nuevo Usuario</h2>
+      <form id="user-form">
+        <!-- Campo oculto para identificar si es edición (tendrá un ID) o nuevo usuario -->
+        <input type="hidden" id="user-id" name="user-id">
+        
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        
+        <label for="correo">Correo:</label>
+        <input type="email" id="correo" name="correo" required>
+        
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" id="contrasena" name="contrasena" required minlength="6">
+        
+        <label for="rango">Rango:</label>
+        <select id="rango" name="rango" required>
+          <option value="admin">Admin</option>
+          <option value="cajero">Cajero</option>
+          <option value="usuario">Usuario</option>
+        </select>
+        
+        <button type="submit" class="save-btn">Guardar Usuario</button>
+        <button type="button" class="cancel-btn" onclick="resetForm()">Cancelar</button>
+      </form>
+    </section>
+  </div>
+  
+  <!-- Lógica en JavaScript para manejo del formulario -->
+  <script>
+    // Función para cargar la lista de usuarios desde la API
+    async function loadUsers() {
+      try {
+        // Se usa el endpoint correcto '/api/usuarios'
+        const response = await fetch('/api/usuarios');
+        console.log("Respuesta de la API:", response); 
+
+        if (!response.ok) {
+          throw new Error(`Error en la carga de usuarios: ${response.statusText}`);
+        }
+
+        const users = await response.json();
+        console.log("Usuarios recibidos:", users);
+
+        const userListBody = document.getElementById('user-list-body');
+        if (!userListBody) {
+          throw new Error("Elemento 'user-list-body' no encontrado en el DOM.");
+        }
+
+        userListBody.innerHTML = '';
+
+        users.forEach(user => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${user.id_usuario}</td>
+            <td>${user.nombre_usuario}</td>
+            <td>${user.correo_usuario}</td>
+            <td>${user.rango_usuario}</td>
+            <td>
+              <button class="edit-btn" onclick="editUser(${user.id_usuario})">Editar</button>
+              <button class="delete-btn" onclick="deleteUser(${user.id_usuario})">Eliminar</button>
+            </td>
+          `;
+          userListBody.appendChild(row);
+        });
+
+      } catch (error) {
+        console.error('Error cargando usuarios:', error);
+      }
+    }
+
+    // Cargar usuarios al iniciar la página
+    document.addEventListener("DOMContentLoaded", loadUsers);
+    window.onload = loadUsers;
+
+    // Función para editar un usuario
+    function editUser(userId) {
+      fetch(`/api/usuarios/${userId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error al obtener el usuario');
+          }
+          return response.json();
+        })
+        .then(user => {
+          document.getElementById('form-title').innerText = "Editar Usuario";
+          // Se usan las propiedades de la base de datos
+          document.getElementById('user-id').value = user.id_usuario;
+          document.getElementById('nombre').value = user.nombre_usuario;
+          document.getElementById('correo').value = user.correo_usuario;
+          document.getElementById('contrasena').value = ''; // Dejar la contraseña vacía por seguridad
+          document.getElementById('rango').value = user.rango_usuario;
+        })
+        .catch(err => console.error('Error al cargar los datos del usuario:', err));
+    }
+
+    // Función para eliminar un usuario
+    function deleteUser(userId) {
+      if (confirm("¿Estás seguro de eliminar este usuario?")) {
+        fetch(`/api/usuarios/${userId}`, {
+          method: 'DELETE',
+        })
+        .then(response => {
+          if (response.ok) {
+            alert("Usuario eliminado.");
+            loadUsers(); // Recargar la lista de usuarios
+          } else {
+            alert("Error al eliminar el usuario.");
+          }
+        })
+        .catch(err => console.error('Error al eliminar el usuario:', err));
+      }
+    }
+
+    // Función para resetear el formulario
+    function resetForm() {
+      document.getElementById('form-title').innerText = "Agregar Nuevo Usuario";
+      document.getElementById('user-id').value = '';
+      document.getElementById('user-form').reset();
+    }
+
+    // Enviar el formulario para crear o actualizar un usuario
+    document.getElementById('user-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const userId = document.getElementById('user-id').value;
+      const nombre = document.getElementById('nombre').value;
+      const correo = document.getElementById('correo').value;
+      const contrasena = document.getElementById('contrasena').value;
+      const rango = document.getElementById('rango').value;
+
+      // Se envían los campos que espera el servidor: nombre, correo, contrasena, rango
+      const data = {
+        nombre: nombre,
+        correo: correo,
+        contrasena: contrasena,
+        rango: rango
+      };
+
+      // Se utiliza el endpoint correcto '/api/usuarios'
+      let url = '/api/usuarios';
+      let method = 'POST';
+
+      // Si existe userId, se trata de una actualización
+      if (userId) {
+        url = `/api/usuarios/${userId}`;
+        method = 'PUT';
+      }
+
+      fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          alert(userId ? "Usuario actualizado." : "Nuevo usuario agregado.");
+          loadUsers(); // Recargar la lista de usuarios
+          resetForm();
+        } else {
+          alert("Error al guardar el usuario.");
+        }
+      })
+      .catch(err => console.error('Error al guardar el usuario:', err));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+/* Fondo de pantalla con la imagen */
+body {
+  background-image: url('http://3.17.156.14/img/FondoMenuLomitero.png'); /* Asegúrate de que la URL sea la correcta */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  margin: 0;
+  height: 100vh; /* Para que el fondo cubra toda la pantalla */
+  font-family: Arial, sans-serif; /* Tipografía para el texto */
+}
+
+/* Estilo del contenedor del formulario */
+.login-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centra el formulario */
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+}
