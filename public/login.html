@@ -2,29 +2,26 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="login.css"> <!-- Vincula tu archivo CSS -->
-  <script src="script.js" defer></script> <!-- Vincula tu archivo JS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Sistema de Ventas</title>
+  <link rel="stylesheet" href="login.css">
 </head>
 <body>
   <div class="login-container">
-    <h2>Iniciar sesión</h2>
-    <form id="login-form" action="/login" method="POST">
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm">
       <div class="form-group">
-        <label for="correo_usuario">Correo electrónico:</label>
-        <input type="email" id="correo_usuario" name="correo_usuario" required>
-        <small id="correo_error" class="error-message"></small>
+        <label for="usuario">Usuario:</label>
+        <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario" required>
       </div>
-
       <div class="form-group">
-        <label for="contrasena_usuario">Contraseña:</label>
-        <input type="password" id="contrasena_usuario" name="contrasena_usuario" required>
-        <small id="contrasena_error" class="error-message"></small>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
       </div>
-
-      <button type="submit">Ingresar</button>
+      <button type="submit">Login</button>
     </form>
+    <div id="message"></div>
   </div>
+  <script src="login.js"></script>
 </body>
 </html>

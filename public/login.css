@@ -1,66 +1,66 @@
-/* Fondo de pantalla con la imagen */
 body {
-  background-image: url('http://3.17.156.14/img/FondoMenuLomitero.png'); /* Asegúrate de que la URL sea la correcta */
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   margin: 0;
-  height: 100vh; /* Para que el fondo cubra toda la pantalla */
-  font-family: Arial, sans-serif; /* Tipografía para el texto */
 }
 
-/* Estilo del contenedor del formulario */
 .login-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centra el formulario */
-  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+  background: #fff;
   padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 300px;
 }
 
-h2 {
+.login-container h2 {
   text-align: center;
-  font-size: 1.5em;
+  margin-bottom: 20px;
 }
 
 .form-group {
   margin-bottom: 15px;
 }
 
-label {
+.form-group label {
   display: block;
   margin-bottom: 5px;
 }
 
-input {
+.form-group input {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 5px;
+  padding: 8px;
   border: 1px solid #ccc;
-  font-size: 1em;
+  border-radius: 4px;
 }
 
 button {
   width: 100%;
   padding: 10px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: #333;
   border: none;
-  border-radius: 5px;
+  color: #fff;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 1em;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #555;
 }
 
-.error-message {
-  color: red;
-  font-size: 0.9em;
+#message {
+  margin-top: 15px;
+  text-align: center;
 }
+
+#message.success {
+  color: green;
+}
+
+#message.error {
+  color: red;
+}
+

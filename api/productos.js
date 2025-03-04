@@ -47,23 +47,25 @@ router.post('/', (req, res) => {
 });
 
 
-  // Actualizar un producto existente
-  router.put('/:id', (req, res) => {
-    const id = req.params.id;
-    const { nombre, cantidad, precio, descripcion, idCategoria, estado, img } = req.body;
+router.put('/:id', (req, res) => {
+  const id = req.params.id;
+  const { nombre, cantidad, precio, descripcion, idCategoria, estado } = req.body;
 
-    if (!nombre || !cantidad || !precio || !idCategoria || estado === undefined) {
-      return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios excepto la descripción y la imagen' });
+  if (!nombre || !cantidad || !precio || !idCategoria || estado === undefined) {
+    return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios excepto la descripción' });
+  }
+
+  const query = 'UPDATE tb_producto SET nombre = ?, cantidad = ?, precio = ?, descripcion = ?, idCategoria = ?, estado = ? WHERE idProducto = ?';
+  conexion.execute(query, [nombre, cantidad, precio, descripcion, idCategoria, estado, id], (err, results) => {
+    if (err) {
+      console.error("Error al actualizar producto:", err);
+      return res.status(500).json({ success: false, message: 'Error al actualizar el producto' });
     }
-
-    const query = 'UPDATE tb_producto SET nombre = ?, cantidad = ?, precio = ?, descripcion = ?, idCategoria = ?, estado = ?, img = ? WHERE idProducto = ?';
-    conexion.execute(query, [nombre, cantidad, precio, descripcion, idCategoria, estado, img, id], (err, results) => {
-      if (err) {
-        return res.status(500).json({ success: false, message: 'Error al actualizar el producto' });
-      }
-      return res.json({ success: true, message: 'Producto actualizado correctamente' });
-    });
+    return res.json({ success: true, message: 'Producto actualizado correctamente' });
   });
+});
+
+
 
   // Eliminar un producto
   router.delete('/:id', (req, res) => {
